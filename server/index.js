@@ -3,6 +3,7 @@ const cors = require("cors")
 const { connection } = require("./config/db");
 const { userRouter } = require("./routes/userRouter");
 const { auth } = require("./middleware/auth.middleware");
+const { productRouter } = require("./routes/productRoutes");
 const dotenv = require("dotenv").config();
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors());
 
 app.use(express.json());
 app.use("/user", userRouter);
+app.use("/products", productRouter);
 
 app.get("/", auth, (req, res) => {
     res.send("Home Page")
