@@ -1,11 +1,19 @@
 const express = require("express");
+const cors = require("cors")
 const { connection } = require("./config/db");
+const { userRouter } = require("./routes/userRouter");
+const { auth } = require("./middleware/auth.middleware");
 const dotenv = require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT;
 
-app.get("/", (req, res) => {
+app.use(cors());
+
+app.use(express.json());
+app.use("/user", userRouter);
+
+app.get("/", auth, (req, res) => {
     res.send("Home Page")
 })
 
