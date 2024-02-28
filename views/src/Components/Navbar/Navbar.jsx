@@ -23,14 +23,14 @@ const Navbar = () => {
 
 
     return (
-        <header className='bg-white'>
-            <nav className='flex justify-between items-center w-[98%] mx-auto'>
+        <header className='bg-white w-full overflow-hidden '>
+            <nav className='flex justify-between items-center w-[85%] mx-auto'>
                 <div className='flex items-center font-bold text-2xl'>
                     <Link to='/'><img src={Logo} alt="Logo" className='w-12 m-4 md:6' /></Link>
-                    <p className='text-xl'>Brand Name</p>
+                    
                 </div>
                 <div className='nav-links absolute md:static md:min-h-fit bg-white md:w-auto min-h-[40vh] left-0 top-[-100%] w-full flex items-center px-5 z-10'>
-                    <ul className='flex md:flex-row flex-col md:items-center md:gap-[4vh gap-10 font-bold hover: cursor-pointer  text-black text-[17px]'>
+                    <ul className='flex md:flex-row flex-col md:items-center md:gap-[4vh] gap-10 hover: cursor-pointer  text-[#65647C] font-[Poppins]'>
                     <li className='hover:text-[#f26b8c] md:hidden'>
                             <Link to='/'>Home</Link>
                         </li>
@@ -52,14 +52,15 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className='flex items-center gap-2'>
-                    <Link className='bg-[#e73f69] text-white rounded-3xl py-2 px-6  hover:bg-[#f26b8c]' to="/signup">Sign Up</Link>
+                    <Link className='bg-[#8B7E74] text-white rounded-3xl py-2 px-6  hover:bg-[#f26b8c]' to="/signup">Sign Up</Link>
                     <img src={menuIcon} alt="Profile-logo" className='w-10 m-2 mr-0 md:hidden' onClick={() => toggleMenu(event)} />
                 </div>
             </nav>
+            <hr className='bg-black'></hr>
 
         </header>
 
-    );
+    ); 
 };
 
 export default Navbar;
