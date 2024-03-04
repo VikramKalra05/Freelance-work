@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Logo from "../../assets/reshot-icon-heart-coffee-M34YRS6ZHW.svg";
+import Logo from "../../assets/logo.svg";
 
 export default function Signup() {
   return (

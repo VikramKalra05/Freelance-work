@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import Logo from "../../assets/reshot-icon-heart-coffee-M34YRS6ZHW.svg";
+import Logo from "../../assets/logo.svg";
 import background from "../../assets/background.avif"
 export default function Login() {
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-purple-600 overflow-x-hidden ">
       <div className="w-full max-w-md p-6 bg-white rounded-md shadow-md">
@@ -17,7 +18,7 @@ export default function Login() {
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" action="#" method="">
        
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -55,7 +56,6 @@ export default function Login() {
 
             <div>
               <button
-                type="submit"
                 className="flex w-full justify-center rounded-md bg-[#e73f69] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Login   

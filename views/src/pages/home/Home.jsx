@@ -1,15 +1,15 @@
 import React from 'react'
 import Carousel from '../../Components/Carousel/Carousel'
 import Navbar from '../../Components/Navbar/Navbar'
-import Testimonial from '../../Components/Testimonials/Testimonial'
-import Bestseller from '../../Components/Bestseller/Bestseller'
+import Features from '../../Components/Features/Features'
+import About from '../../Components/About'
 
 const Home = () => {
   return (
     <div>
-        <Carousel/>
-        <Bestseller/>
-        <Testimonial />
+      <Carousel />
+      <Features />
+      <About />
     </div>
   )
 }

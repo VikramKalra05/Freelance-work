@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Logo from "../../assets/reshot-icon-heart-coffee-M34YRS6ZHW.svg"
+import Logo from "../../assets/logo.svg"
 import Menu from "../../assets/menu.svg"
 import close from "../../assets/closebtn.svg"
 import { Link } from 'react-router-dom'
@@ -23,15 +23,15 @@ const Navbar = () => {
 
 
     return (
-        <header className='bg-white w-full overflow-hidden '>
-            <nav className='flex justify-between items-center w-[85%] mx-auto'>
+        <header className='bg-white w-full overflow-hidden'>
+            <nav className='flex justify-between items-center w-[88%] mx-auto'>
                 <div className='flex items-center font-bold text-2xl'>
                     <Link to='/'><img src={Logo} alt="Logo" className='w-12 m-4 md:6' /></Link>
                     
                 </div>
                 <div className='nav-links absolute md:static md:min-h-fit bg-white md:w-auto min-h-[40vh] left-0 top-[-100%] w-full flex items-center px-5 z-10'>
                     <ul className='flex md:flex-row flex-col md:items-center md:gap-[4vh] gap-10 hover: cursor-pointer  text-[#65647C] font-[Poppins]'>
-                    <li className='hover:text-[#f26b8c] md:hidden'>
+                    <li className='hover:text-[#f26b8c] md:hidden mt-4'>
                             <Link to='/'>Home</Link>
                         </li>
                         <li className='hover:text-[#f26b8c]'>
@@ -46,7 +46,7 @@ const Navbar = () => {
                         <li className='hover:text-[#f26b8c]'>
                             <Link>Mixes</Link>
                         </li>
-                        <li className='hover:text-[#f26b8c]'>
+                        <li className='hover:text-[#f26b8c] mb-4 md:mb-0'>
                             <Link>Diet Specific</Link>
                         </li>
                     </ul>
