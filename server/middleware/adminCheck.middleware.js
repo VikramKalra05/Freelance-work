@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
 const { BlacklistModel } = require("../models/blacklistModel");
+const jwt = require("jsonwebtoken")
 
-const auth = async (req, res, next) => {
+const adminCheck = async (req, res, next) => {
     const token = req.headers.authorization;
     try {
         if(token){
@@ -13,8 +13,11 @@ const auth = async (req, res, next) => {
                     if(err){
                         res.status(400).send({"msg": "Invalid token"})
                     }else{
-                        req.body.user = decoded.user;
-                        next();
+                        if(decoded.admin){
+                            next();
+                        }else{
+                            res.status(400).send({"msg": "You are not authorized for this route"})
+                        }
                     }
                 })
             }
@@ -27,5 +30,5 @@ const auth = async (req, res, next) => {
 }
 
 module.exports = {
-    auth
+    adminCheck
 }
