@@ -2,6 +2,9 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../models/userModel");
 const { BlacklistModel } = require("../models/blacklistModel");
+const { sendEmail } = require('../utils/sendEmail');
+const { TokenModel } = require('../models/userToken');
+const crypto = require("crypto");
 
 const getAllUsers = async (req, res) => {
     try {
@@ -23,9 +26,19 @@ const register = async (req, res) => {
                 if(err){
                     res.status(200).send({"err": "Something went wrong while hashing"});
                 }else{
-                    const user = new UserModel({email, username, password: hash, subscription: false});
+                    const user = new UserModel({email, username, password: hash});
                     await user.save();
-                    res.status(201).send({"msg": "User registered successfuly", "user": user});
+                    const token = await new TokenModel({
+                        userId: user._id,
+                        token: crypto.randomBytes(32).toString("hex")
+                    }).save();
+
+                    const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
+                    const message = `Click here to verify -> ${url}`
+
+                    await sendEmail(user.email, "Verify Email", message);
+                    
+                    res.status(201).send({"msg": "An Email sent to your account please verify ", "user": user});
                 }
             })
         }
@@ -39,19 +52,55 @@ const login = async (req, res) => {
     try {
         const user = await UserModel.findOne({email});
         if(user){
-            bcrypt.compare(password, user.password, (err, hash) => {
-                if(hash){
-                    const token = jwt.sign({user: user}, "secret", { expiresIn: "5hr"});
-                    res.status(200).send({
-                        "msg": "Login successful",
-                        "token": token
-                    });
-                }else{
-                    res.status(200).send({"msg": "Wrong Password"});
-                }
-            })
+            if(!user.verified){
+                const token = await new TokenModel({
+                    userId: user._id,
+                    token: crypto.randomBytes(32).toString("hex")
+                }).save();
+                const url = `${process.env.BASE_URL}user/${user._id}/verify/${token.token}`;
+                const message = `Click here to verify -> ${url}`
+                
+                await sendEmail(user.email, "Verify Email", message);
+                res.status(200).send({"msg": "An Email sent to your account please verify ", "user": user});
+            }else{                
+                bcrypt.compare(password, user.password, (err, hash) => {
+                    if(hash){
+                        const token = jwt.sign({user: user}, "secret", { expiresIn: "5hr"});
+                        res.status(200).send({
+                            "msg": "Login successful",
+                            "token": token
+                        });
+                    }else{
+                        res.status(200).send({"msg": "Wrong Password"});
+                    }
+                })
+            }
         }else{
             res.status(200).send({"msg": "No user found"});
+        }
+    } catch (error) {
+        res.status(400).send({"err": error})
+    }
+}
+
+const verifyUser = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({ _id: req.params.id });
+        if (user){
+            const token = await TokenModel.findOne({
+                userId: user._id,
+                token: req.params.token
+            })
+            if(token){
+                await UserModel.findByIdAndUpdate({ _id: user._id}, {verified: true});
+                await TokenModel.findByIdAndDelete({ _id: token._id })
+
+                res.status(200).send({"msg": "Email verified successfully"})
+            }else{
+                res.status(400).send({"msg": "Invalid Link"});
+            }
+        }else{
+            res.status(400).send({"msg": "Invalid Link"});
         }
     } catch (error) {
         res.status(400).send({"err": error})
@@ -100,13 +149,12 @@ const changePassword = async (req, res) => {
             res.status(200).send({"msg": "No user found"});
         }
     } catch (error) {
-        console.log(error);
         res.status(400).send({"err": error})
     }
 }
 
 const deleteUser = async (req, res) => {
-    const { email, password} = req.body;
+    const { email, password } = req.body;
     try {
         const user = await UserModel.findOne({email});
         if(user){
@@ -126,6 +174,15 @@ const deleteUser = async (req, res) => {
     }
 }
 
+// const subscribeUser = async (req, res) => {
+//     const {id} = req.body.user;
+//     try {
+//         const user = await UserModel.findByIdAndUpdate({_id: id}, {subscription: true});
+//     } catch (error) {
+//         res.status(400).send({"err": error})
+//     }
+// }
+
 
 module.exports = {
     register,
@@ -133,5 +190,6 @@ module.exports = {
     logout,
     changePassword,
     deleteUser,
-    getAllUsers
+    getAllUsers,
+    verifyUser
 }
